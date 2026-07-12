@@ -1,19 +1,24 @@
-# README
+# HeidiSQL Settings Export Parser
 
-## HeidiSQL (Export) Settings Parser
+Parse a HeidiSQL settings export and print connection details in a readable
+form. The decoder currently targets the password representation used by
+HeidiSQL 12.x; validate the output when using another HeidiSQL version.
 
-This Python script parses a text file containing HeidiSQL exported settings, which also have database connection settings in them and prints the information in a human-readable format
-The password field is encoded in the settings export, so we print both the original encoded version and the decoded one, this code works as of HeidiSQL 12.x but this may change in future 
+## Requirements
 
-### Dependencies
+- Python 3
 
-- Python 3.x
+## Usage
 
-### How to use
+1. Export the settings from HeidiSQL and save the file as `export_heidi.txt`
+   beside `heidi_decode.py`.
+2. Run:
 
-1. Place the text file containing the connection settings in the same directory as the script.
-2. Rename the text file to "export_heidi.txt", or change the file name in the script to match the actual file name.
-3. Run the script in the command line or IDE of your choice. The script will print out the connection settings in the following format:
+   ```sh
+   python3 heidi_decode.py
+   ```
+
+The script prints each connection in the following format:
 
 ```
 Connection name: <connection name>
@@ -26,6 +31,15 @@ Library: <library name>
 ServerVersion: <server version number>
 ServerVersionFull: <server full version>
 ```
+
+> [!WARNING]
+> Settings exports can contain database credentials. Treat the input and the
+> decoded output as sensitive: do not commit either one or share the output in
+> logs, issues, or chat transcripts.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
 
 If a setting is not found in the file for a particular connection, the corresponding value will be blank.
 
