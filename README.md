@@ -6,16 +6,17 @@ HeidiSQL 12.x; validate the output when using another HeidiSQL version.
 
 ## Requirements
 
-- Python 3
+- [uv](https://docs.astral.sh/uv/)
 
 ## Usage
 
 1. Export the settings from HeidiSQL and save the file as `export_heidi.txt`
    beside `heidi_decode.py`.
-2. Run:
+2. Create the project environment and run:
 
    ```sh
-   python3 heidi_decode.py
+   uv sync
+   uv run heidi_decode.py
    ```
 
 The script prints each connection in the following format:
