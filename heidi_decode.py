@@ -1,12 +1,13 @@
-def decode_password(encoded_password=''):
-    if encoded_password == '':
-        return ''
+def decode_password(encoded_password=""):
+    if encoded_password == "":
+        return ""
     decoded_password = ""
     shift = int(encoded_password[-1])
     encoded_password = encoded_password[:-1]
     for i in range(0, len(encoded_password), 2):
-        decoded_password += chr(int(encoded_password[i:i+2], 16) - shift)
+        decoded_password += chr(int(encoded_password[i : i + 2], 16) - shift)
     return decoded_password
+
 
 def encode_password(s):
     shift = len(s) % 10
@@ -51,6 +52,7 @@ def read_connection_data(filename):
         connections.append(current_connection)
     return connections
 
+
 # define a main function
 def main():
     # call read_connection_data() function with file name as argument
@@ -68,6 +70,7 @@ def main():
         print(f"ServerVersion: {conn.get('ServerVersion', '')}")
         print(f"ServerVersionFull: {conn.get('ServerVersionFull', '')}")
         print()
+
 
 # call the main function
 if __name__ == "__main__":
