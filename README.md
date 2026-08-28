@@ -1,76 +1,52 @@
 # HeidiSQL Settings Export Parser
 
-Parse a HeidiSQL settings export and print connection details in a readable
-form. The decoder currently targets the password representation used by
-HeidiSQL 12.x; validate the output when using another HeidiSQL version.
+Parse a HeidiSQL settings export and print its connection settings in a readable
+form. The decoder targets the password representation used by HeidiSQL 12.x.
+
+## Security warning
+
+HeidiSQL exports may contain database hosts, usernames, and recoverable
+passwords. Treat the input and terminal output as credentials. Keep both out of
+Git, logs, issues, screenshots, and chat transcripts.
 
 ## Requirements
 
+- Python 3.10 or newer
 - [uv](https://docs.astral.sh/uv/)
 
 ## Usage
 
-1. Export the settings from HeidiSQL and save the file as `export_heidi.txt`
-   beside `heidi_decode.py`.
-2. Create the project environment and run:
+Clone the repository, place the export beside `heidi_decode.py` as
+`export_heidi.txt`, and run:
 
-   ```sh
-   uv sync
-   uv run heidi_decode.py
-   ```
-
-The script prints each connection in the following format:
-
-```
-Connection name: <connection name>
-Host: <host address>
-Port: <port number>
-User: <user name>
-Password (encoded): <encoded password>
-Password (decoded): <decoded password>
-Library: <library name>
-ServerVersion: <server version number>
-ServerVersionFull: <server full version>
+```bash
+uv sync --locked
+uv run heidi_decode.py
 ```
 
-> [!WARNING]
-> Settings exports can contain database credentials. Treat the input and the
-> decoded output as sensitive: do not commit either one or share the output in
-> logs, issues, or chat transcripts.
+The script prints each connection and the settings it recognizes:
 
-## License
-
-MIT. See [LICENSE](LICENSE).
-
-If a setting is not found in the file for a particular connection, the corresponding value will be blank.
-
-### Input File Format
-
-The script expects the input file to follow the following format, lines that don't follow this format will be ignored:
-
-```
-Servers\<connection name>\key1<|||>datatype<|||>value
-Servers\<connection name>\key2<|||>datatype<|||>value
-...
-Servers\<connection name>\keyN<|||>datatype<|||>value
-
-Servers\<connection name 2>\key1<|||>datatype<|||>value
-Servers\<connection name 2>\key2<|||>datatype<|||>value
-...
-Servers\<connection name 2>\keyM<|||>datatype<|||>value
+```text
+Connection name: dev_db
+Host: localhost
+Port: 3306
+User: dev_user
+Password (encoded): 32FOPIR1SIha
+Password (decoded): dev_password
+Library:
+ServerVersion:
+ServerVersionFull:
 ```
 
-Where:
-- \<connection name\> is the name of the connection, and must not contain any "\\" characters.
-- \<keyN\> and \<keyM\> are the names of the connection settings (e.g. Host, Port, User, Password, Library, ServerVersion)
-- \<datatype\> is a number that usually is 1 or 3, I have no idea what it means, but don't need it
-- \<value\> is the value of the key
+Unknown settings and malformed lines are ignored. Missing fields are printed as
+blank values. Validate decoded passwords before relying on them with HeidiSQL
+versions other than 12.x.
 
-### Example
+## Complete example
 
-#### Input File
+Given this export:
 
-```
+```text
 Servers\dev_db\Host<|||>1<|||>localhost
 Servers\dev_db\Port<|||>1<|||>3306
 Servers\dev_db\User<|||>1<|||>dev_user
@@ -84,9 +60,9 @@ Servers\prod_db\ServerVersion<|||>1<|||>50154
 Servers\prod_db\ServerVersionFull<|||>1<|||>5.1.54 - MySQL Community Server
 ```
 
-#### Output
+the script prints:
 
-```
+```text
 Connection name: dev_db
 Host: localhost
 Port: 3306
@@ -107,3 +83,31 @@ Library: libmariadb.dll
 ServerVersion: 50154
 ServerVersionFull: 5.1.54 - MySQL Community Server
 ```
+
+## Input format
+
+Each line uses this structure:
+
+```text
+Servers\<connection name>\<setting><|||><datatype><|||><value>
+```
+
+Connection names must not contain a backslash. Settings can include `Host`,
+`Port`, `User`, `Password`, `Library`, `ServerVersion`, and
+`ServerVersionFull`. HeidiSQL preserves the numeric datatype field, but the
+parser does not use it.
+
+## Development
+
+```bash
+uv sync --locked --dev
+uv run ruff format --check heidi_decode.py tests
+uv run ruff check --select E9,F63,F7,F82 heidi_decode.py tests
+uv run python -m unittest discover -s tests -v
+```
+
+CI runs the same checks on Linux, macOS, and Windows.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
