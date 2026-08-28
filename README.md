@@ -1,5 +1,8 @@
 # HeidiSQL Settings Export Parser
 
+[![CI](https://github.com/alsd4git/heidisql-settings-export-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/alsd4git/heidisql-settings-export-parser/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
+
 Parse a HeidiSQL settings export and print its connection settings in a readable
 form. The decoder targets the password representation used by HeidiSQL 12.x.
 
