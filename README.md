@@ -17,17 +17,41 @@ Git, logs, issues, screenshots, and chat transcripts.
 - Python 3.10 or newer
 - [uv](https://docs.astral.sh/uv/)
 
-## Usage
+## Installation
 
-Clone the repository, place the export beside `heidi_decode.py` as
-`export_heidi.txt`, and run:
+Install a tagged version directly from GitHub:
 
 ```bash
-uv sync --locked
-uv run heidi_decode.py
+uv tool install git+https://github.com/alsd4git/heidisql-settings-export-parser.git@v0.1.0
+heidi-decode --help
 ```
 
-The script prints each connection and the settings it recognizes:
+For one-off use:
+
+```bash
+uvx --from git+https://github.com/alsd4git/heidisql-settings-export-parser.git@v0.1.0 heidi-decode export_heidi.txt
+```
+
+The examples are intentionally pinned to a tag. Tagged releases also publish a
+wheel and source distribution, which can be used as reproducible installation
+artifacts without publishing the project to PyPI.
+
+## Usage
+
+Pass the HeidiSQL export explicitly:
+
+```bash
+heidi-decode export_heidi.txt
+```
+
+For backward compatibility, omitting the argument still reads
+`export_heidi.txt` from the current directory:
+
+```bash
+heidi-decode
+```
+
+The command prints each connection and the settings it recognizes:
 
 ```text
 Connection name: dev_db
@@ -63,7 +87,7 @@ Servers\prod_db\ServerVersion<|||>1<|||>50154
 Servers\prod_db\ServerVersionFull<|||>1<|||>5.1.54 - MySQL Community Server
 ```
 
-the script prints:
+the command prints:
 
 ```text
 Connection name: dev_db
@@ -103,11 +127,18 @@ parser does not use it.
 ## Development
 
 ```bash
+git clone https://github.com/alsd4git/heidisql-settings-export-parser.git
+cd heidisql-settings-export-parser
 uv sync --locked --dev
+uv run heidi-decode --help
 uv run ruff format --check heidi_decode.py tests
 uv run ruff check --select E9,F63,F7,F82 heidi_decode.py tests
 uv run python -m unittest discover -s tests -v
+uv build
 ```
+
+`uv run heidi_decode.py` remains supported for source checkouts, but the
+`heidi-decode` console entry point is the preferred user-facing interface.
 
 CI runs the same checks on Linux, macOS, and Windows.
 
