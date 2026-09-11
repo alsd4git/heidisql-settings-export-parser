@@ -1,3 +1,7 @@
+import argparse
+from pathlib import Path
+
+
 def decode_password(encoded_password=""):
     if encoded_password == "":
         return ""
@@ -19,7 +23,7 @@ def encode_password(s):
 
 
 def read_connection_data(filename):
-    with open(filename, "r") as f:
+    with open(filename, "r", encoding="utf-8") as f:
         settings = f.read()
 
     connections = []
@@ -27,7 +31,6 @@ def read_connection_data(filename):
 
     for line in settings.split("\n"):
         if line.startswith("Servers\\"):
-            # A new connection setting
             subkeys = line.split("\\")
             conn_name = subkeys[1]
             line_details = subkeys[2].split("<|||>")
@@ -39,26 +42,37 @@ def read_connection_data(filename):
                 continue
 
             if not current_connection or current_connection["name"] != conn_name:
-                # Add the previous connection to the list
                 if current_connection:
                     connections.append(current_connection)
-                # Start a new connection dictionary
                 current_connection = {"name": conn_name}
-            # Add the key-value pair to the current connection dictionary
             current_connection[key.strip()] = value.strip()
 
-    # Add the last connection to the list of connections
     if current_connection:
         connections.append(current_connection)
     return connections
 
 
-# define a main function
-def main():
-    # call read_connection_data() function with file name as argument
-    connections = read_connection_data("export_heidi.txt")
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser(
+        description="Parse a HeidiSQL settings export and print connection settings."
+    )
+    parser.add_argument(
+        "export_file",
+        nargs="?",
+        default="export_heidi.txt",
+        help="HeidiSQL export file (default: export_heidi.txt)",
+    )
+    return parser.parse_args(argv)
 
-    # iterate over connections and print details
+
+def main(argv=None):
+    args = parse_args(argv)
+    export_path = Path(args.export_file)
+    if not export_path.is_file():
+        raise SystemExit(f"Input file not found: {export_path}")
+
+    connections = read_connection_data(export_path)
+
     for conn in connections:
         print(f"Connection name: {conn.get('name', '')}")
         print(f"Host: {conn.get('Host', '')}")
@@ -72,6 +86,5 @@ def main():
         print()
 
 
-# call the main function
 if __name__ == "__main__":
     main()
