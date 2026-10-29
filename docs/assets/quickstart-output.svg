@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="362" viewBox="0 0 920 362" role="img" aria-labelledby="title description">
+  <title id="title">heidi-decode output for synthetic demo data</title>
+  <desc id="description">CLI output from a fake HeidiSQL connection. No real credentials are used.</desc>
+  <rect width="920" height="362" rx="12" fill="#111827" />
+  <circle cx="28" cy="28" r="6" fill="#f87171" />
+  <circle cx="50" cy="28" r="6" fill="#fbbf24" />
+  <circle cx="72" cy="28" r="6" fill="#34d399" />
+  <text x="96" y="33" class="caption">heidi-decode · synthetic output</text>
+  <g class="output">
+  <text x="32" y="94">Connection name: demo_connection</text>
+  <text x="32" y="122">Host: demo.invalid</text>
+  <text x="32" y="150">Port: 3306</text>
+  <text x="32" y="178">User: demo_user</text>
+  <text x="32" y="206">Password (encoded): 6a656f693168697173317372707d4</text>
+  <text x="32" y="234">Password (decoded): fake-demo-only</text>
+  <text x="32" y="262">Library: </text>
+  <text x="32" y="290">ServerVersion: </text>
+  <text x="32" y="318">ServerVersionFull:</text>
+  </g>
+  <style>
+    .caption { fill: #9ca3af; font: 14px system-ui, sans-serif; }
+    .output { fill: #e5e7eb; font: 16px ui-monospace, SFMono-Regular, Consolas, monospace; }
+  </style>
+</svg>

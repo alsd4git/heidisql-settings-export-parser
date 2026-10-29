@@ -37,6 +37,33 @@ to the Git URL, for example `@v0.1.0`, to select that version. The release workf
 builds wheel and source distributions without publishing to PyPI. Record the version
 in [CHANGELOG.md](CHANGELOG.md) before pushing a matching tag.
 
+## Quickstart demo
+
+The repository includes a synthetic export with a fake host, user, and password.
+It is safe for documentation and testing, but do not use this example as a real
+connection. HeidiSQL exports can contain recoverable credentials. Keep real
+exports and decoded output out of Git, logs, screenshots, and chat transcripts.
+
+Run the parser on the example:
+
+```bash
+uv run heidi-decode examples/synthetic-export.txt
+```
+
+The command prints the decoded settings. To regenerate the preview below, run
+the checked-out parser against the same synthetic export in a temporary working
+directory:
+
+```bash
+uv run python demos/render_quickstart.py
+```
+
+![heidi-decode output for synthetic demo data](docs/assets/quickstart-output.svg)
+
+The preview comes from the parser's actual command-line entry point in
+[`heidi_decode.py`](heidi_decode.py). The renderer captures stdout and writes a
+deterministic SVG. It does not read any HeidiSQL export from your machine.
+
 ## Usage
 
 Pass the HeidiSQL export explicitly:
