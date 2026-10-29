@@ -1,1 +1,4 @@
 *heidi*.txt
+build/
+dist/
+*.egg-info/

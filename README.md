@@ -19,22 +19,23 @@ Git, logs, issues, screenshots, and chat transcripts.
 
 ## Installation
 
-Install a tagged version directly from GitHub:
+Install directly from the default branch on GitHub:
 
 ```bash
-uv tool install git+https://github.com/alsd4git/heidisql-settings-export-parser.git@v0.1.0
+uv tool install git+https://github.com/alsd4git/heidisql-settings-export-parser.git
 heidi-decode --help
 ```
 
 For one-off use:
 
 ```bash
-uvx --from git+https://github.com/alsd4git/heidisql-settings-export-parser.git@v0.1.0 heidi-decode export_heidi.txt
+uvx --from git+https://github.com/alsd4git/heidisql-settings-export-parser.git heidi-decode export_heidi.txt
 ```
 
-The examples are intentionally pinned to a tag. Tagged releases also publish a
-wheel and source distribution, which can be used as reproducible installation
-artifacts without publishing the project to PyPI.
+No packaged release has been published yet. Once a release exists, append its tag
+to the Git URL, for example `@v0.1.0`, to select that version. The release workflow
+builds wheel and source distributions without publishing to PyPI. Record the version
+in [CHANGELOG.md](CHANGELOG.md) before pushing a matching tag.
 
 ## Usage
 
