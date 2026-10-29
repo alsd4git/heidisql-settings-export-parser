@@ -1,0 +1,4 @@
+Servers\demo_connection\Host<|||>1<|||>demo.invalid
+Servers\demo_connection\Port<|||>1<|||>3306
+Servers\demo_connection\User<|||>1<|||>demo_user
+Servers\demo_connection\Password<|||>1<|||>6a656f693168697173317372707d4
