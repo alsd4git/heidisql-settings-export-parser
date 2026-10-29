@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "heidisql-settings-export-parser"
 version = "0.1.0"
@@ -5,8 +9,14 @@ description = "Parse and inspect HeidiSQL settings exports"
 readme = "README.md"
 requires-python = ">=3.10"
 
+[project.scripts]
+heidi-decode = "heidi_decode:main"
+
 [tool.uv]
-package = false
+package = true
+
+[tool.setuptools]
+py-modules = ["heidi_decode"]
 
 [dependency-groups]
 dev = ["ruff>=0.13,<1"]
