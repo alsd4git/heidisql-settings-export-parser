@@ -11,8 +11,8 @@
   <text x="32" y="122">Host: demo.invalid</text>
   <text x="32" y="150">Port: 3306</text>
   <text x="32" y="178">User: demo_user</text>
-  <text x="32" y="206">Password (encoded): 6a656f693168697173317372707d4</text>
-  <text x="32" y="234">Password (decoded): fake-demo-only</text>
+  <text x="32" y="206">Password (encoded): [hidden]</text>
+  <text x="32" y="234">Password (decoded): [hidden]</text>
   <text x="32" y="262">Library: </text>
   <text x="32" y="290">ServerVersion: </text>
   <text x="32" y="318">ServerVersionFull:</text>

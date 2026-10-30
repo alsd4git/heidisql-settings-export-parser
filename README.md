@@ -9,8 +9,11 @@ form. The decoder targets the password representation used by HeidiSQL 12.x.
 ## Security warning
 
 HeidiSQL exports may contain database hosts, usernames, and recoverable
-passwords. Treat the input and terminal output as credentials. Keep both out of
-Git, logs, issues, screenshots, and chat transcripts.
+passwords. Both password forms are hidden by default. Use `--show-passwords` only
+for authorized recovery: it prints recoverable credentials to stdout and warns
+on stderr. Keep exports and revealed output out of Git, logs, issues,
+screenshots, and chat transcripts. Even normal output contains private hosts
+and usernames.
 
 ## Requirements
 
@@ -50,7 +53,8 @@ Run the parser on the example:
 uv run heidi-decode examples/synthetic-export.txt
 ```
 
-The command prints the decoded settings. To regenerate the preview below, run
+The command prints the connection settings with both password forms hidden.
+To regenerate the preview below, run
 the checked-out parser against the same synthetic export in a temporary working
 directory:
 
@@ -86,15 +90,23 @@ Connection name: dev_db
 Host: localhost
 Port: 3306
 User: dev_user
-Password (encoded): 32FOPIR1SIha
-Password (decoded): dev_password
+Password (encoded): [hidden]
+Password (decoded): [hidden]
 Library:
 ServerVersion:
 ServerVersionFull:
 ```
 
 Unknown settings and malformed lines are ignored. Missing fields are printed as
-blank values. Validate decoded passwords before relying on them with HeidiSQL
+blank values, except that both password fields remain hidden. To reveal them:
+
+```bash
+heidi-decode --show-passwords export_heidi.txt
+```
+
+The reveal option warns on stderr and prints both password representations to
+stdout. Malformed encodings cause an error before any connection is printed.
+Validate decoded passwords before relying on them with HeidiSQL
 versions other than 12.x.
 
 ## Complete example
@@ -105,7 +117,7 @@ Given this export:
 Servers\dev_db\Host<|||>1<|||>localhost
 Servers\dev_db\Port<|||>1<|||>3306
 Servers\dev_db\User<|||>1<|||>dev_user
-Servers\dev_db\Password<|||>1<|||>32FOPIR1SIha
+Servers\dev_db\Password<|||>1<|||>6667786172637575797174662
 Servers\prod_db\Host<|||>1<|||>prod.host.com
 Servers\prod_db\Port<|||>1<|||>5432
 Servers\prod_db\User<|||>1<|||>prod_user
@@ -115,15 +127,15 @@ Servers\prod_db\ServerVersion<|||>1<|||>50154
 Servers\prod_db\ServerVersionFull<|||>1<|||>5.1.54 - MySQL Community Server
 ```
 
-the command prints:
+the default command prints:
 
 ```text
 Connection name: dev_db
 Host: localhost
 Port: 3306
 User: dev_user
-Password (encoded): 32FOPIR1SIha
-Password (decoded): dev_password
+Password (encoded): [hidden]
+Password (decoded): [hidden]
 Library:
 ServerVersion:
 ServerVersionFull:
@@ -132,8 +144,8 @@ Connection name: prod_db
 Host: prod.host.com
 Port: 5432
 User: prod_user
-Password (encoded): 7375726762736476767a7275673
-Password (decoded): prod_password
+Password (encoded): [hidden]
+Password (decoded): [hidden]
 Library: libmariadb.dll
 ServerVersion: 50154
 ServerVersionFull: 5.1.54 - MySQL Community Server

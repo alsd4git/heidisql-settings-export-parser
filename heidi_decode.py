@@ -1,15 +1,22 @@
 import argparse
+import re
+import sys
 from pathlib import Path
 
 
 def decode_password(encoded_password=""):
     if encoded_password == "":
         return ""
+    if not re.fullmatch(r"(?:[0-9a-fA-F]{2})*[0-9]", encoded_password):
+        raise ValueError("Invalid encoded password format")
     decoded_password = ""
     shift = int(encoded_password[-1])
     encoded_password = encoded_password[:-1]
     for i in range(0, len(encoded_password), 2):
-        decoded_password += chr(int(encoded_password[i : i + 2], 16) - shift)
+        value = int(encoded_password[i : i + 2], 16) - shift
+        if value < 0:
+            raise ValueError("Invalid encoded password format")
+        decoded_password += chr(value)
     return decoded_password
 
 
@@ -57,6 +64,11 @@ def parse_args(argv=None):
         description="Parse a HeidiSQL settings export and print connection settings."
     )
     parser.add_argument(
+        "--show-passwords",
+        action="store_true",
+        help="Reveal encoded and decoded passwords in stdout; keep output private",
+    )
+    parser.add_argument(
         "export_file",
         nargs="?",
         default="export_heidi.txt",
@@ -73,13 +85,28 @@ def main(argv=None):
 
     connections = read_connection_data(export_path)
 
-    for conn in connections:
+    # Validate all requested decodes before emitting any connection or secret.
+    decoded = []
+    if args.show_passwords:
+        print(
+            "Warning: encoded and decoded passwords will be written to stdout. "
+            "Do not share or log this output.",
+            file=sys.stderr,
+        )
+        try:
+            decoded = [decode_password(conn.get("Password", "")) for conn in connections]
+        except ValueError:
+            raise SystemExit("Cannot reveal passwords: invalid encoded password format") from None
+
+    for index, conn in enumerate(connections):
         print(f"Connection name: {conn.get('name', '')}")
         print(f"Host: {conn.get('Host', '')}")
         print(f"Port: {conn.get('Port', '')}")
         print(f"User: {conn.get('User', '')}")
-        print(f"Password (encoded): {conn.get('Password', '')}")
-        print(f"Password (decoded): {decode_password(conn.get('Password', ''))}")
+        print(
+            f"Password (encoded): {conn.get('Password', '') if args.show_passwords else '[hidden]'}"
+        )
+        print(f"Password (decoded): {decoded[index] if args.show_passwords else '[hidden]'}")
         print(f"Library: {conn.get('Library', '')}")
         print(f"ServerVersion: {conn.get('ServerVersion', '')}")
         print(f"ServerVersionFull: {conn.get('ServerVersionFull', '')}")
