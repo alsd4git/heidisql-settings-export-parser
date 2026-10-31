@@ -180,8 +180,8 @@ uv build
 `uv run heidi_decode.py` remains supported for source checkouts, but the
 `heidi-decode` console entry point is the preferred user-facing interface.
 
-Tests run on Linux, macOS, and Windows with Python 3.11–3.15, plus Python 3.10
-on Linux. Formatting, static checks, and the build/install smoke test run once
+Tests run on Linux, macOS, and Windows with Python 3.10–3.15.
+Formatting, static checks, and the build/install smoke test run once
 on Linux with Python 3.15.
 
 ## License
